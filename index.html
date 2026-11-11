@@ -4,61 +4,284 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BLUE SALES</title>
+  <meta name="theme-color" content="#1689e8">
+  <title>BLUE SALES - Quản lý bán hàng</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="brand-icon login-logo">B</div>
+      <h1>BLUE SALES</h1>
+      <p>ĐĂNG NHẬP HỆ THỐNG</p>
+      <input id="loginPassword" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password">
+      <button class="btn btn-blue full-btn" id="loginBtn">Đăng nhập</button>
+      <small>Mật khẩu mặc định: 123456</small>
+      <p id="loginError" class="login-error"></p>
+    </div>
+  </div>
 
-  <div id="app">
-    <section id="login-screen" class="login-screen">
-      <div class="login-card">
-        <h1>BLUE SALES</h1>
-        <p>Hệ thống quản lý bán hàng</p>
-        <input id="password" type="password"
-          placeholder="Nhập mật khẩu">
-        <button onclick="login()">ĐĂNG NHẬP</button>
-        <p id="login-error"></p>
+  <div id="app" class="app-hidden">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon">B</div>
+        <div>
+          <h1>BLUE SALES</h1>
+          <p>QUẢN LÝ BÁN HÀNG</p>
+        </div>
       </div>
-    </section>
+      <div class="top-actions">
+        <div class="today-label" id="todayLabel"></div>
+        <button class="small-action" id="lockBtn">Khóa</button>
+      </div>
+    </header>
 
-    <section id="main-screen" hidden>
-      <header>
-        <h1>BLUE SALES</h1>
-        <button onclick="logout()">Đăng xuất</button>
-      </header>
+    <main class="container">
+      <section class="welcome">
+        <div>
+          <p class="welcome-small">TỔNG QUAN KINH DOANH</p>
+          <h2>Xin chào! 👋</h2>
+          <p>Quản lý đơn hàng và theo dõi doanh thu của bạn.</p>
+        </div>
+        <div class="welcome-icon">📊</div>
+      </section>
 
-      <main>
-        <h2>Chọn loại hình kinh doanh</h2>
-        <div class="business-list">
-          <button onclick="selectBusiness('trasua')">
-            🧋 TRÀ SỮA
-          </button>
-          <button onclick="selectBusiness('caphe')">
-            ☕ CÀ PHÊ
-          </button>
+      <section class="business-switch panel">
+        <div class="switch-heading">
+          <div>
+            <span class="section-tag">LOẠI HÌNH KINH DOANH</span>
+            <h2>Chọn danh mục bán hàng</h2>
+          </div>
+        </div>
+        <div class="business-buttons">
+          <button class="business-btn active" data-business="Trà sữa">🧋 Trà sữa</button>
+          <button class="business-btn" data-business="Cà phê">☕ Cà phê</button>
+        </div>
+      </section>
+
+      <section class="stats-grid">
+        <div class="stat-card main-stat">
+          <div class="stat-heading">
+            <span>Doanh thu hôm nay</span>
+            <span>💰</span>
+          </div>
+          <h2 id="todayRevenue">0 ₫</h2>
+          <p>Tổng tiền các đơn đã lưu hôm nay</p>
         </div>
 
-        <div id="store-screen" hidden>
-          <button onclick="backHome()">← Quay lại</button>
-          <h2 id="business-title"></h2>
-          <div id="store-list"></div>
-          <button onclick="createStore()">+ Tạo cửa hàng</button>
+        <div class="stat-card">
+          <div class="stat-heading">
+            <span>Đơn hàng</span>
+            <span>🧾</span>
+          </div>
+          <h2 id="todayOrders">0</h2>
+          <p>Số đơn hôm nay</p>
         </div>
 
-        <div id="sales-screen" hidden>
-          <button onclick="backStores()">← Danh sách cửa hàng</button>
-          <h2 id="store-title"></h2>
+        <div class="stat-card">
+          <div class="stat-heading">
+            <span>Sản phẩm đã bán</span>
+            <span>📦</span>
+          </div>
+          <h2 id="todayProducts">0</h2>
+          <p>Tổng số lượng sản phẩm</p>
+        </div>
+      </section>
 
-          <div class="menu-actions">
-            <button onclick="openMenu()">Quản lý menu</button>
-            <button onclick="openSales()">Bán hàng</button>
-            <button onclick="openReports()">Báo cáo</button>
+      <section class="panel">
+        <div class="section-title">
+          <div>
+            <span class="section-tag">TẠO GIAO DỊCH</span>
+            <h2>Thêm đơn hàng mới</h2>
+          </div>
+          <span class="title-icon">🛒</span>
+        </div>
+
+        <div class="form-grid">
+          <div class="field product-field">
+            <label for="productName">Tên món nước</label>
+            <input
+              id="productName"
+              type="text"
+              list="productSuggestions"
+              placeholder="Gõ tên món, ví dụ: mat"
+            >
+            <datalist id="productSuggestions"></datalist>
           </div>
 
-          <div id="content"></div>
+          <div class="field">
+            <label for="productSize">Size</label>
+            <select id="productSize">
+              <option value="">Không chọn size</option>
+              <option>M</option>
+              <option>L</option>
+              <option>XL</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="productQuantity">Số lượng</label>
+            <input id="productQuantity" type="number" min="1" step="1" value="1">
+          </div>
+
+          <div class="field">
+            <label for="productPrice">Giá bán (VNĐ)</label>
+            <input id="productPrice" type="number" min="0" step="1000" placeholder="Tự điền theo menu">
+          </div>
         </div>
-      </main>
-    </section>
+
+        <p class="hint" id="priceHint">
+          Chọn món và size để tự điền giá trong menu.
+        </p>
+
+        <button class="btn btn-blue full-btn" id="addProductBtn">
+          + Thêm sản phẩm vào đơn
+        </button>
+
+        <div class="cart-area">
+          <h3>Sản phẩm trong đơn</h3>
+          <div id="cartList" class="empty-state">
+            Chưa có sản phẩm nào.
+          </div>
+
+          <div class="order-total">
+            <span>Tổng tiền đơn hàng</span>
+            <strong id="cartTotal">0 ₫</strong>
+          </div>
+
+          <button class="btn btn-save full-btn" id="saveOrderBtn">
+            ✓ Lưu đơn hàng
+          </button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <div>
+            <span class="section-tag">QUẢN LÝ MENU</span>
+            <h2>Danh sách món và giá</h2>
+          </div>
+          <span class="title-icon">📋</span>
+        </div>
+
+        <p class="hint">
+          Menu được tách riêng theo Trà sữa và Cà phê.
+          Bạn có thể thêm món mới hoặc chỉnh giá tại đây.
+        </p>
+
+        <div class="menu-form">
+          <div class="field">
+            <label for="menuName">Tên món mới</label>
+            <input id="menuName" placeholder="Ví dụ: Matcha Dừa">
+          </div>
+
+          <div class="menu-prices">
+            <div class="field">
+              <label for="menuPriceM">Giá M</label>
+              <input id="menuPriceM" type="number" min="0" placeholder="M">
+            </div>
+
+            <div class="field">
+              <label for="menuPriceL">Giá L</label>
+              <input id="menuPriceL" type="number" min="0" placeholder="L">
+            </div>
+
+            <div class="field">
+              <label for="menuPriceXL">Giá XL</label>
+              <input id="menuPriceXL" type="number" min="0" placeholder="XL">
+            </div>
+          </div>
+
+          <button class="btn btn-blue full-btn" id="addMenuBtn">
+            + Thêm món vào menu
+          </button>
+        </div>
+
+        <div id="menuList" class="menu-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <div>
+            <span class="section-tag">BÁO CÁO</span>
+            <h2>Doanh thu theo ngày</h2>
+          </div>
+          <span class="title-icon">📈</span>
+        </div>
+
+        <div class="field date-field">
+          <label for="reportDate">Chọn ngày muốn xem</label>
+          <input type="date" id="reportDate">
+        </div>
+
+        <div class="report-box">
+          <div class="report-row">
+            <span>Doanh thu</span>
+            <strong id="reportRevenue">0 ₫</strong>
+          </div>
+          <div class="report-row">
+            <span>Số đơn hàng</span>
+            <strong id="reportOrders">0</strong>
+          </div>
+          <div class="report-row">
+            <span>Số sản phẩm đã bán</span>
+            <strong id="reportProducts">0</strong>
+          </div>
+        </div>
+
+        <button class="btn btn-outline full-btn" id="exportBtn">
+          ↓ Xuất báo cáo CSV
+        </button>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <div>
+            <span class="section-tag">LỊCH SỬ GIAO DỊCH</span>
+            <h2>Đơn hàng đã bán</h2>
+          </div>
+          <span class="title-icon">📋</span>
+        </div>
+
+        <div class="field date-field">
+          <label for="historyDate">Lọc đơn hàng theo ngày</label>
+          <input type="date" id="historyDate">
+        </div>
+
+        <div id="orderHistory" class="history-list">
+          <div class="empty-state">Chưa có đơn hàng nào.</div>
+        </div>
+      </section>
+
+      <section class="panel settings-panel">
+        <div class="section-title">
+          <div>
+            <span class="section-tag">BẢO MẬT</span>
+            <h2>Đổi mật khẩu</h2>
+          </div>
+          <span class="title-icon">🔐</span>
+        </div>
+
+        <div class="field">
+          <label for="newPassword">Mật khẩu mới</label>
+          <input id="newPassword" type="password" placeholder="Nhập mật khẩu mới">
+        </div>
+
+        <button class="btn btn-outline full-btn" id="changePasswordBtn">
+          Cập nhật mật khẩu
+        </button>
+
+        <p class="hint">
+          Mật khẩu lưu trên trình duyệt đang sử dụng.
+          Đây là lớp khóa giao diện, không thay thế bảo mật máy chủ.
+        </p>
+      </section>
+
+      <footer>
+        <strong>BLUE SALES</strong>
+        <p>Quản lý bán hàng đơn giản và hiệu quả.</p>
+      </footer>
+    </main>
   </div>
 
   <script src="script.js"></script>
